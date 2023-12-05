@@ -18,3 +18,5 @@ Render Link: https://blog-akasa-air.onrender.com/
 Online Database service used: freesqldatabase
 
 Database service link: https://www.freesqldatabase.com/
+
+https://www.phpmyadmin.co/db_sql.php?db=sql12667936
