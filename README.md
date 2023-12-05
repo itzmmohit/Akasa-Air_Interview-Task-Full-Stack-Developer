@@ -3,3 +3,10 @@ Design and implement a web-based blogging platform where users can create, publi
 
 Hosting Platform used: Render
 Render Link: https://blog-akasa-air.onrender.com/
+
+To Run:
+
+1. Open a Terminal and give the path of the server folder
+2. Enter command : npm install
+3. Enter command : node index.js
+4. Site will be live at : http://localhost:3000/
