@@ -13,7 +13,7 @@ const db = require('db');
 const port = 3000;
 const hostname = 'localhost';
 
-const database = "blog-akasa";
+const database = "bn1u4inqqr2tqvs8hgp3";
 const tbl = "users";
 
 app.use(cors());
