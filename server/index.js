@@ -33,7 +33,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 // MySql connection
 var connection = mysql.createConnection({
-    host: '127.0.0.1',
+    host: "localhost",
     user: "root",
     password: "",
     database: database
