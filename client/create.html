@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Akasa Air</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #1f1f1f;
+      color: #ffffff;
+    }
+
+    header {
+      background-color: #2d2d2d;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .header-left a {
+      text-decoration: none;
+      color: #ffffff;
+    }
+
+    .header-left img {
+      height: 20px;
+      width: 30px;
+      padding-top: 5px;
+      margin-left: 5px;
+    }
+
+    .header-right a {
+      color: #ffffff;
+      text-decoration: none;
+    }
+
+    main {
+      padding-top: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    #add-post,
+    #display-posts {
+      width: 80%;
+      margin-bottom: 20px;
+      background-color: #2d2d2d;
+      padding: 20px;
+      border-radius: 10px;
+    }
+
+    h2 {
+      color: #ffa500;
+    }
+
+    label {
+      display: block;
+      margin: 10px 0 5px;
+      color: #ffffff;
+    }
+
+    input,
+    textarea,
+    select {
+      width: 100%;
+      padding: 8px;
+      margin: 5px 0 15px;
+      display: inline-block;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+      border-radius: 5px;
+      background-color: #2d2d2d;
+      color: #ffffff;
+    }
+
+    button {
+      background-color: #ffa500;
+      color: #ffffff;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #ff8c00;
+    }
+
+    .footer {
+      background-color: #2d2d2d;
+      padding: 10px 20px;
+      margin-top: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer p {
+      margin: 0;
+      color: #ffffff;
+    }
+
+    .post-box {
+      border: 1px solid #ffa500;
+      padding: 10px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+    }
+
+    .post-image {
+      max-width: 100px;
+      max-height: 100px;
+      margin-right: 10px;
+      border-radius: 5px;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgb(0, 0, 0);
+      background-color: rgba(0, 0, 0, 0.4);
+      padding-top: 60px;
+    }
+
+    .modal-content {
+      background-color: #2d2d2d;
+      margin: 5% auto;
+      padding: 20px;
+      border: 1px solid #ffa500;
+      border-radius: 10px;
+      width: 50%;
+    }
+
+    .close {
+      color: #ffa500;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    .close:hover,
+    .close:focus {
+      color: #ff8c00;
+      text-decoration: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+  <header class="fixed-header" style="display: flex; justify-content: space-between; align-items: center;">
+    <div class="header-left">
+      <a href="main.html">
+        <p style="display: inline-block; vertical-align: middle; margin: 0;">Akasa Air <img src="images/akasalogo.png" alt=""></p>
+      </a>
+    </div>
+    <div class="header-right" style="display: flex; align-items: center;">
+      <!-- <input type="text" id="search-box" placeholder="Search" oninput="searchPosts(this.value)" style="margin-right: 300px; width: 500px; margin-top: 10px; height: 25px;"> -->
+      <a href="main.html" style="margin-right: 10px;">Home</a>
+      <a href="support.html" style="margin-right: 10px;">Support</a>
+      <a href="index.html">Logout</a>
+    </div>
+  </header>
+  
+  <main style="padding-top: 50px;">
+    <section id="add-post">
+      <h2 >Add a New Post</h2>
+      <form id="post-form">
+        <label for="post-title">Title:</label>
+        <input type="text" id="post-title" required>
+
+        <label for="post-content">Content:</label>
+        <textarea id="post-content" rows="4" required></textarea>
+
+        <label for="post-tags">Tags:</label>
+        <input type="text" id="post-tags" required>
+
+        <label for="post-image">Image Path:</label>
+        <input type="file" id="post-image">
+
+        <button type="button" id="add-post-button">Add Post</button>
+      </form>
+    </section>
+
+    <div id="myModal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h2>Edit Post</h2>
+        <form id="edit-post-form">
+          <label for="edit-post-title">Title:</label>
+          <input type="text" id="edit-post-title" required>
+    
+          <label for="edit-post-content">Content:</label>
+          <textarea id="edit-post-content" rows="4" required></textarea>
+    
+          <label for="edit-post-tags">Tags:</label>
+          <input type="text" id="edit-post-tags" required>
+    
+          <button type="button" id="update-post-button" onclick="updatePost()">Update Post</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- <section id="display-posts">
+      <h2 style="margin-bottom: 20px;">All Posts</h2>
+      <ul id="posts-list" style="list-style-type: none; padding: 0; margin: 0;">
+      </ul>
+    </section> -->
+  </main>
+
+  <div class="footer">
+    <div class="left-content">
+      <p><b>Made By:</b> Mohit Mehta 2247267</p>
+    </div>
+    <div class="right-content">
+      <p><b>Akasa Air - Full Stack Development Task 2</b> </p>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+  
+      console.log('Script loaded successfully');
+  
+      const addPostButton = document.getElementById('add-post-button');
+      addPostButton.addEventListener("click", handleAddPost);
+  
+      // Function to handle adding a new post
+      function handleAddPost() {
+        // Get form elements
+        const title = document.getElementById('post-title').value;
+        const content = document.getElementById('post-content').value;
+        const tags = document.getElementById('post-tags').value;
+        const imageInput = document.getElementById('post-image');
+        const image = imageInput.files[0];
+  
+        // Check if required fields are filled
+        if (!title || !content || !tags) {
+          alert('Please fill in all required fields.');
+          return;
+        }
+  
+        // Create FormData object
+        const formData = new FormData();
+        formData.append('title', title);
+        formData.append('content', content);
+        formData.append('tags', tags);
+        formData.append('image', image);
+  
+        // Send a POST request to the server
+        fetch('http://localhost:3000/posts', {
+          method: 'POST',
+          body: formData
+        })
+          .then(response => {
+            if (response.ok) {
+              console.log('Post added successfully');
+              // Reload posts after adding a new one
+              fetchAndDisplayPosts();
+            } else {
+              console.error('Error adding post');
+            }
+          })
+          .catch(error => {
+            console.error('Error adding post', error);
+          });
+      }
+
+      
+      // Fetch and display posts on page load
+      fetchAndDisplayPosts();
+
+      
+  
+    });
+
+    function searchPosts(query) {
+      // Fetch posts that match the search query
+      fetch(`http://localhost:3000/posts/search?query=${query}`)
+        .then(response => response.json())
+        .then(posts => {
+          const postsList = document.getElementById('posts-list');
+          postsList.innerHTML = '';
+
+          posts.forEach(post => {
+            const listItem = document.createElement('li');
+            listItem.innerHTML = `
+              <div class="post-box">
+                <img src="${post.image || 'images/download.webp'}" alt="Post Image" class="post-image">
+                <div>
+                  <p style="color: orange;"><b><strong>${post.title}</strong></b></p><br><br>
+                  ${post.content}<br><br>
+                  Tags: ${post.tags}<br><br>
+                  Created At: ${post.created_at}
+                  <div class="post-buttons">
+                    <button class="edit-button" onclick="editPost(${post.id})">Edit</button>
+                    <button class="delete-button" onclick="deletePost(${post.id})">Delete</button>
+                  </div>
+                </div>
+              </div>
+            `;
+            postsList.appendChild(listItem);
+          });
+        })
+        .catch(error => {
+          console.error('Error searching posts', error);
+        });
+    }
+  
+   // Function to edit a post
+   function editPost(postId) {
+          console.log('Editing post', postId);
+          // Fetch the post details from the server
+          fetch(`http://localhost:3000/posts/${postId}`)
+              .then(response => {
+                  if (!response.ok) {
+                      throw new Error('Post not found');
+                  }
+                  return response.json();
+              })
+              .then(post => {
+                  // Populate the modal with post details
+                  document.getElementById('edit-post-title').value = post.title;
+                  document.getElementById('edit-post-content').value = post.content;
+                  document.getElementById('edit-post-tags').value = post.tags;
+
+                  // Display the modal
+                  document.getElementById('myModal').style.display = 'block';
+
+                  // Set up the update button to call the updatePost function with the postId
+                  document.getElementById('update-post-button').addEventListener('click', () => updatePost(postId));
+              })
+              .catch(error => {
+                  console.error('Error fetching post details', error);
+                  // Handle the error, e.g., show a message to the user
+              });
+      }
+
+
+      // Function to update a post
+      function updatePost(postId) {
+          // Get updated post details from the modal
+          const updatedTitle = document.getElementById('edit-post-title').value;
+          const updatedContent = document.getElementById('edit-post-content').value;
+          const updatedTags = document.getElementById('edit-post-tags').value;
+
+          // Make a PUT request to update the post
+          fetch(`http://localhost:3000/posts/${postId}`, {
+              method: 'PUT',
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                  title: updatedTitle,
+                  content: updatedContent,
+                  tags: updatedTags,
+              }),
+          })
+              .then(response => {
+                  if (response.ok) {
+                      console.log('Post updated successfully');
+                      closeModal(); // Close the modal after successful update
+                      fetchAndDisplayPosts(); // Refresh posts after updating
+                  } else {
+                      console.error('Error updating post');
+                  }
+              })
+              .catch(error => {
+                  console.error('Error updating post', error);
+              });
+      }
+
+
+      // Function to delete a post
+      function deletePost(postId) {
+        // Use the parameter postId instead of the global variable currentEditPostId
+        fetch(`http://localhost:3000/posts/${postId}`, {
+          method: 'DELETE',
+        })
+          .then(response => {
+            if (response.ok) {
+              console.log('Post deleted successfully');
+              fetchAndDisplayPosts(); // Refresh posts after deletion
+            } else {
+              console.error('Error deleting post');
+            }
+          })
+          .catch(error => {
+            console.error('Error deleting post', error);
+          });
+      }
+
+  
+      // Function to close the modal
+      function closeModal() {
+        // Close the modal
+        document.getElementById('myModal').style.display = 'none';
+      }
+  
+      // Function to fetch and display posts on page load
+      function fetchAndDisplayPosts() {
+        fetch('http://localhost:3000/posts')
+          .then(response => response.json())
+          .then(posts => {
+            const postsList = document.getElementById('posts-list');
+            postsList.innerHTML = '';
+  
+            posts.forEach(post => {
+              const listItem = document.createElement('li');
+              listItem.innerHTML = `
+                <div class="post-box">
+                  <img src="${post.image || 'images/download.webp'}" alt="Post Image" class="post-image">
+                  <div>
+                    <p style="color: orange;"><b><strong>${post.title}</strong></b></p><br><br>
+                    ${post.content}<br><br>
+                    Tags: ${post.tags}<br><br>
+                    Created At: ${post.created_at}
+                    <div class="post-buttons">
+                      <button class="edit-button" onclick="editPost(${post.id})">Edit</button>
+                      <button class="delete-button" onclick="deletePost(${post.id})">Delete</button>
+                    </div>
+                  </div>
+                </div>
+              `;
+              postsList.appendChild(listItem);
+            });
+          })
+          .catch(error => {
+            console.error('Error fetching posts', error);
+          });
+      }
+  
+
+
+  </script>
+  
+</body>
+
+</html>
