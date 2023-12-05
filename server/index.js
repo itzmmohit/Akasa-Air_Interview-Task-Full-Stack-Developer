@@ -13,7 +13,7 @@ const db = require('db');
 const port = 3000;
 const hostname = 'sql12.freesqldatabase.com';
 
-const database = "bn1u4inqqr2tqvs8hgp3";
+const database = "sql12667936";
 const tbl = "users";
 
 app.use(cors());
