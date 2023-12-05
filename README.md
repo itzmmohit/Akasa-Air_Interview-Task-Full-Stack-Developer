@@ -12,7 +12,9 @@ To Run:
 4. Site will be live at : http://localhost:3000/
 
 Hosting Platform used: Render
+
 Render Link: https://blog-akasa-air.onrender.com/
 
 Online Database service used: freesqldatabase
+
 Database service link: https://www.freesqldatabase.com/
