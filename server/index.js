@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const mysql = require('mysql2');
 const path = require('path');
 const session = require('express-session');
-// const bcrypt = require('bcrypt');
+const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
 const multer = require('multer');
 
@@ -64,68 +64,74 @@ app.post('/register', async (req, res) => {
     console.log('Register button clicked');
     const { first, last, email, password } = req.body;
 
-    // Check if the email already exists in the database
-    const checkEmailQuery = `SELECT * FROM ${tbl} WHERE email = ?`;
-    const checkEmailValues = [email];
+    try {
+        // Check if the email already exists in the database
+        const checkEmailQuery = `SELECT * FROM ${tbl} WHERE email = ?`;
+        const checkEmailValues = [email];
 
-    connection.query(checkEmailQuery, checkEmailValues, async (checkErr, checkResult) => {
-        if (checkErr) {
-            console.error(checkErr);
-            res.status(500).send('Error checking email availability');
-        } else {
-            // If the email is already registered, return an error
-            if (checkResult.length > 0) {
-                res.status(409).send('Email already registered');
-            } else {
-                // If the email is not registered, proceed with user registration
-                const hashedPassword = await bcrypt.hash(password, 10);
+        const checkResult = await queryAsync(checkEmailQuery, checkEmailValues);
 
-                const insertQuery = `INSERT INTO ${tbl} (first, email, password, last) VALUES (?, ?, ?, ?)`;
-                const insertValues = [first, last, email, hashedPassword];
-
-                connection.query(insertQuery, insertValues, (insertErr, insertResult) => {
-                    if (insertErr) {
-                        console.error(insertErr);
-                        res.status(500).send('Error registering user');
-                    } else {
-                        console.log('User registered successfully');
-                        res.status(200).send('User registered successfully');
-                    }
-                });
-            }
+        if (checkResult.length > 0) {
+            return res.status(409).send('Email already registered');
         }
-    });
+
+        // If the email is not registered, proceed with user registration
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        const insertQuery = `INSERT INTO ${tbl} (first, email, password, last) VALUES (?, ?, ?, ?)`;
+        const insertValues = [first, email, hashedPassword, last];
+
+        const insertResult = await queryAsync(insertQuery, insertValues);
+
+        console.log('User registered successfully');
+        return res.status(201).send('User registered successfully');
+    } catch (error) {
+        console.error('Error registering user', error);
+        return res.status(500).send('Error registering user');
+    }
 });
 
+// Async wrapper for MySQL queries
+function queryAsync(sql, values) {
+    return new Promise((resolve, reject) => {
+        connection.query(sql, values, (err, result) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(result);
+            }
+        });
+    });
+}
 
-app.post('/login', (req, res) => {
+app.post('/login', async (req, res) => {
     console.log('Login button clicked');
     const { email, password } = req.body;
 
-    const sql = `SELECT * FROM ${tbl} WHERE email = ?`;
-    const values = [email];
+    try {
+        const sql = `SELECT * FROM ${tbl} WHERE email = ?`;
+        const values = [email];
 
-    connection.query(sql, values, async (err, result) => {
-        if (err) {
-            console.error(err);
-            res.status(500).send('Error logging in');
-        } else {
-            console.log('Query result:', result);
-            if (result.length > 0) {
-                const isPasswordValid = await bcrypt.compare(password, result[0].password);
-                console.log('Is password valid:', isPasswordValid);
-                if (isPasswordValid) {
-                    console.log('User logged in successfully');
-                    res.status(200).send('User logged in successfully');
-                } else {
-                    res.status(401).send('Invalid email or password');
-                }
+        const result = await queryAsync(sql, values);
+
+        if (result.length > 0) {
+            const isPasswordValid = await bcrypt.compare(password, result[0].password);
+
+            if (isPasswordValid) {
+                console.log('User logged in successfully');
+                return res.status(200).send('User logged in successfully');
             } else {
-                res.status(401).send('Invalid email or password');
+                return res.status(401).send('Invalid email or password');
             }
+        } else {
+            return res.status(401).send('Invalid email or password');
         }
-    });
+    } catch (error) {
+        console.error('Error logging in', error);
+        return res.status(500).send('Error logging in');
+    }
 });
+
 
 // New route for handling forgot password requests
 app.post('/forgot-password', async (req, res) => {

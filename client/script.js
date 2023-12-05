@@ -49,89 +49,7 @@ document.addEventListener("DOMContentLoaded", function () {
     event.preventDefault(); // Prevent the default form submission
     handleRegister();
   });
-
-  const emailInput = document.getElementById('emailSignup');
-  const passwordInput = document.getElementById('passwordSignup');
-  const firstNameInput = document.getElementById('firstName');
-  const lastNameInput = document.getElementById('lastName');
-
-  const passwordInfoIcon = document.getElementById('password-info-icon');
-
-  const validateEmail = (email) => {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  };
-
-  const validatePassword = (password) => {
-    return /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/.test(password);
-  };
-
-  const validateName = (name) => {
-    return /^[A-Za-z]+$/.test(name);
-  };
-
-  const updateRegisterButtonState = () => {
-    const emailIsValid = validateEmail(emailInput.value);
-    const passwordIsValid = validatePassword(passwordInput.value);
-    const firstNameIsValid = validateName(firstNameInput.value);
-    const lastNameIsValid = validateName(lastNameInput.value);
-
-    const allInputsAreValid = emailIsValid && passwordIsValid && firstNameIsValid && lastNameIsValid;
-    registerButton.disabled = !allInputsAreValid;
-  };
-
-  const validateAndHighlight = (input, validator) => {
-    const isValid = validator(input.value);
-    highlightValidity(input, isValid);
-  };
-
-  const highlightValidity = (element, isValid) => {
-    element.classList.toggle('valid', isValid);
-    element.classList.toggle('invalid', !isValid);
-  };
-
-  if (emailInput) {
-    emailInput.addEventListener('input', function () {
-      validateAndHighlight(this, validateEmail);
-      updateRegisterButtonState();
-    });
-  }
-
-  if (passwordInput) {
-    passwordInput.addEventListener('input', function () {
-      validateAndHighlight(this, validatePassword);
-      updateRegisterButtonState();
-
-      const passwordRequirements = "Password must contain at least 8 characters, one uppercase letter, one lowercase letter, and one digit.";
-
-      if (this.value.length === 0) {
-        passwordInfoIcon.innerHTML = "ℹ️"; // Info icon
-      } else if (!isValid) {
-        passwordInfoIcon.innerHTML = "❌"; // Cross icon
-      } else {
-        passwordInfoIcon.innerHTML = "✅"; // Checkmark icon
-      }
-
-      if (this.value.length > 0) {
-        alert(passwordRequirements);
-      }
-    });
-  }
-
-  if (firstNameInput) {
-    firstNameInput.addEventListener('input', function () {
-      validateAndHighlight(this, validateName);
-      updateRegisterButtonState();
-    });
-  }
-
-  if (lastNameInput) {
-    lastNameInput.addEventListener('input', function () {
-      validateAndHighlight(this, validateName);
-      updateRegisterButtonState();
-    });
-  }
-
-  updateRegisterButtonState(); // Initial state check
+  
 });
 
 function toggleModal(state) {
@@ -152,23 +70,23 @@ function toggleModal(state) {
 
 // Function to handle the register button click
 async function handleRegister() {
-  const first = document.getElementById('firstName').value;
-  const last = document.getElementById('lastName').value;
-  const email = document.getElementById('emailSignup').value;
-  const password = document.getElementById('passwordSignup').value;
+  const first = document.getElementById('firstName').value.trim();
+  const last = document.getElementById('lastName').value.trim();
+  const email = document.getElementById('emailSignup').value.trim();
+  const password = document.getElementById('passwordSignup').value.trim();
 
-  // Validation checks
-  const emailIsValid = validateEmail(email);
-  const passwordIsValid = validatePassword(password);
-  const firstNameIsValid = validateName(first);
-  const lastNameIsValid = validateName(last);
+  // // Validation checks
+  // const emailIsValid = validateEmail(email);
+  // const passwordIsValid = validatePassword(password);
+  // const firstNameIsValid = validateName(first);
+  // const lastNameIsValid = validateName(last);
 
-  if (!emailIsValid || !passwordIsValid || !firstNameIsValid || !lastNameIsValid) {
-    alert("Please fill in all the fields correctly.");
-    return; // Do not proceed with registration if any validation fails
-  }
+  // if (!emailIsValid || !passwordIsValid || !firstNameIsValid || !lastNameIsValid) {
+  //   alert("Please fill in all the fields correctly.");
+  //   return; // Do not proceed with registration if any validation fails
+  // }
 
-  const data = { first, last, email, password };
+  const data = { first, email, password, last };
 
   try {
     const response = await fetch('http://localhost:3000/register', {
@@ -181,6 +99,7 @@ async function handleRegister() {
 
     if (response.ok) {
       console.log('User registered successfully');
+      alert("Registerd Succesfully.");
       window.location.href = "main.html";
       // Add your logic here for successful registration
     } else {
@@ -231,46 +150,3 @@ const loginButton = document.getElementById('loginButton');
 loginButton.addEventListener('click', handleLogin);
 
 // For validating stufff-------------------------
-
-function validateAndHighlight(input, validator) {
-  const isValid = validator(input.value);
-  highlightValidity(input, isValid);
-}
-
-function validateEmail(email) {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email);
-}
-
-function validatePassword(password) {
-  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
-  return passwordRegex.test(password);
-}
-
-function validateName(name) {
-  const nameRegex = /^[a-zA-Z]+$/;
-  return nameRegex.test(name);
-}
-
-function highlightValidity(element, isValid) {
-  element.classList.toggle('valid', isValid);
-  element.classList.toggle('invalid', !isValid);
-}
-
-  //for password
-
-  function sendPasswordResetEmail() {
-    const forgotEmail = document.getElementById('forgotEmail').value;
-  
-    // Perform the logic to send a password reset email
-    // You can use AJAX to send a request to your server to handle the email sending
-    // For simplicity, let's assume the server returns a success message
-    const resetEmailSent = true;
-  
-    if (resetEmailSent) {
-      alert('Password reset email sent successfully. Check your email.');
-      toggleModal('forgotPassword'); // Close the modal after sending the email
-    } else {
-      alert('Error sending password reset email. Please try again.');
-    }
-  }
