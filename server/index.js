@@ -34,8 +34,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // MySql connection
 var connection = mysql.createConnection({
     host: "sql12.freesqldatabase.com",
-    user: "root",
-    password: "",
+    user: "sql12667936",
+    password: "Lvru2RkZHe",
     database: database
 });
 
