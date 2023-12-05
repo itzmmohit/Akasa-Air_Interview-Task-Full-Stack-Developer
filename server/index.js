@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const mysql = require('mysql2');
 const path = require('path');
 const session = require('express-session');
-const bcrypt = require('bcrypt');
+// const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
 const multer = require('multer');
 
@@ -76,7 +76,7 @@ app.post('/register', async (req, res) => {
         }
 
         // If the email is not registered, proceed with user registration
-        const hashedPassword = await bcrypt.hash(password, 10);
+        // const hashedPassword = await bcrypt.hash(password, 10);
 
         const insertQuery = `INSERT INTO ${tbl} (first, email, password, last) VALUES (?, ?, ?, ?)`;
         const insertValues = [first, email, hashedPassword, last];
@@ -115,7 +115,7 @@ app.post('/login', async (req, res) => {
         const result = await queryAsync(sql, values);
 
         if (result.length > 0) {
-            const isPasswordValid = await bcrypt.compare(password, result[0].password);
+            const isPasswordValid = await compare(password, result[0].password);
 
             if (isPasswordValid) {
                 console.log('User logged in successfully');
