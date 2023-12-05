@@ -11,7 +11,7 @@ const multer = require('multer');
 
 const db = require('db');
 const port = 3000;
-const hostname = 'localhost';
+const hostname = 'sql12.freesqldatabase.com';
 
 const database = "bn1u4inqqr2tqvs8hgp3";
 const tbl = "users";
@@ -33,7 +33,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 // MySql connection
 var connection = mysql.createConnection({
-    host: "localhost",
+    host: "sql12.freesqldatabase.com",
     user: "root",
     password: "",
     database: database
